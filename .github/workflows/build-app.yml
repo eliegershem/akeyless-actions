@@ -1,0 +1,26 @@
+name: "build pipeline"
+
+on:
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+jobs:
+  build-app:
+    name: "build app"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: source
+          file: Dockerfile
+          tags: nginx-image:${{ github.sha }}
+      
